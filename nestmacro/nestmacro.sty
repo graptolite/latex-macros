@@ -1,0 +1,58 @@
+% Copyright (C) 2022  Yingbo Li
+%
+% This program is free software: you can redistribute it and/or modify
+% it under the terms of the GNU General Public License as published by
+% the Free Software Foundation, either version 3 of the License, or
+% (at your option) any later version.
+%
+% This program is distributed in the hope that it will be useful,
+% but WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+% GNU General Public License for more details.
+%
+% You should have received a copy of the GNU General Public License
+% along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+% 0 %%%%%%%%%% BACKGROUND
+% 0.1 Overview
+%	\nestmacro applies a macro to itself repeatedly. Whilst it was written mainly for the purposes in 0.2 Motivation, there may also be other uses for it.
+% 0.2 Motivation
+%	The author was writing some notes for Vector Calculus, and was faced with tensors. The author's preferred way of writing tensors is to underline them, with the number of underlines corresponding to the rank of the tensor.
+% 	The tensors faced by the author included scalars (no underline), vectors (one underline), dyads (two underlines), which were all easy to define a macro for. However, a fourth-order tensor also appeared (the Stiffness Tensor, \underline{\underline{\underline{\underline{C}}}}), whose long name (``fourth-order tensor'') meant the author wasn't able to create a good name for a macro that underlined fourth-order tensors 4 times. The author also became curious as to if there was an easy was to write even higher order tensors as well.
+%	With recursion on their mind, a more general solution that could apply any macro repeatedly (i.e. not just \underline) was then desired (though note the final solution doesn't actually use recursion).
+% 0.3 A desired ``solution''
+%	The basic form of the solution would be a function that took (1) the number of times to repeat a desired function, (2) the desired function to repeat and (3) the target object on which the chain of functions is to operate on (note in LaTeX, ``function'' becomes ``macro'').
+%	A basic idea was written in Python, though it used recursion:
+%	f = lambda n,target,macro : "%s{%s}" % (macro,a(n-1,target,macro)) if n>0 else target
+% 	Since only the target function was being applied again and again, a while loop was easier to write, and so after some trial and error (including not being able to discover a way to overwrite a macro's definition to a new definition that references its old definition more than once using \renewcommand, as well as needing to avoid redefining new counter i.e. \newcounter can't be inside \nestmacro if the \nestmacro is to be used multiple times), this macro, which uses \edef, was created.
+% 0.4 Explanation of this ``solution''
+%	The first thing the macro does is to apply the desired macro once to the target object, saving the result to \@total.
+%	Using a while loop, the definition of \@combinedmacro is changed by applying the desired macro on the previous definition of \@combinedmacro as many times as desired.
+%	\@combinedmacro is then ``executed'' at the very end
+
+% 1 %%%%%%%%%% DECLARATIONS
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{nestmacro}[15/11/2022 Nesting Macros]
+
+% 2 %%%%%%%%%% DEPENDENCIES
+
+% 3 %%%%%%%%%% OPTIONS
+
+% 4 %%%%%%%%%% FUNCTIONALITY
+\makeatletter
+\newcounter{i}
+
+\newcommand\nestmacro[3]{
+% #1 is the depth of macro nesting
+% #2 is the desired macro to apply
+% #3 is the target object to which the nested macros are applied
+\edef\@combinedmacro{#2{#3}}
+\setcounter{i}{#1}
+\@whilenum\value{i}>1\do{
+\edef\@combinedmacro{#2\@combinedmacro}
+\addtocounter{i}{-1}
+}
+\@combinedmacro
+}
+
+\makeatother

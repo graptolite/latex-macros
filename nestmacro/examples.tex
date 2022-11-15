@@ -1,0 +1,26 @@
+\documentclass{article}
+ 
+\usepackage{./nestmacro}
+ 
+\begin{document}
+\def\tensor#1#2{\nestmacro{#1}{\underline}{#2}} % can assign this underlining convention for tensors to a new macro (this was basically what the author was motivated to find)
+\begin{center}
+\tensor{4}{C} % a much easier way than writing \underline{\underline{\underline{\underline{C}}}}
+
+\vspace{2em}
+\tensor{6}{S} % also works with higher order tensors
+
+\vspace{2em}
+$\tensor{6}{S}$ % as well a in mathmode
+
+% Now for some random uses that may not exactly be as useful
+\vspace{2em}
+\def\bracket#1{(#1)}
+\nestmacro{10}{\bracket}{So many brackets}
+
+\vspace{2em}
+\def\curl#1{\underline{$\nabla$}$\times$(#1)}
+\nestmacro{5}{\curl}{\underline{v}}
+\end{center}
+
+\end{document}
