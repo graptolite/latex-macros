@@ -1,0 +1,45 @@
+% Copyright (C) 2022  Yingbo Li
+%
+% This program is free software: you can redistribute it and/or modify
+% it under the terms of the GNU General Public License as published by
+% the Free Software Foundation, either version 3 of the License, or
+% (at your option) any later version.
+%
+% This program is distributed in the hope that it will be useful,
+% but WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+% GNU General Public License for more details.
+%
+% You should have received a copy of the GNU General Public License
+% along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+% 0 %%%%%%%%%% BACKGROUND
+% 0.1 Overview
+%	Explicit definitions for different types of things that may be useful in vector calculus.
+% 0.2 Motivation
+%	Create macros for common things in vector calculus than can be easily redefined to the user's preferences.
+
+% 1 %%%%%%%%%% DECLARATIONS
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{vectorcalc}[15/11/2022 Vector Calc Stuff]
+
+% 2 %%%%%%%%%% DEPENDENCIES
+\RequirePackage{amsmath}
+\RequirePackage{../nestmacro/nestmacro}
+
+% 3 %%%%%%%%%% OPTIONS
+
+% 4 %%%%%%%%%% FUNCTIONALITY
+\newcommand{\dsign}{\text{d}}
+\newcommand{\diff}[3][]{\frac{\dsign ^{#1}#2}{\dsign #3^{#1}}}
+\newcommand{\pdiff}[3][]{\frac{\partial^{#1}#2}{\partial#3^{#1}}}
+
+\def\vec#1{\underline{#1}}
+\def\dyad#1{\vec{\vec{#1}}}
+\def\grad#1{\vec{\nabla}#1}
+\def\div#1{\vec{\nabla} \cdot #1}
+\def\curl#1{\vec{\nabla} \times #1}
+\def\laplacian{\nabla^2}
+
+% now with better tensor macro
+\def\tensor#1#2{\nestmacro{#1}{\underline}{#2}}
