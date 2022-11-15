@@ -13,3 +13,6 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+# Usage
+The fastest way to use these `.sty` files is probably to copy everything below `% 4 %%%%%%%%%% FUNCTIONALITY` into the preamble of your `.tex` file, making sure any dependencies are met (may need to copy from multiple `.sty` files).
